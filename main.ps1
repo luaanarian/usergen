@@ -84,12 +84,15 @@ function New-WindowsLocalUser {
         $Credentials = New-Object System.Management.Automation.PSCredential($Username, $SecurePassword)
 
         # 5. Trigger the hidden background process to build C:\Users\<Username>
-        Start-Process `
-            -FilePath      "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" `
-            -WorkingDirectory "C:\Windows\System32" `
-            -Credential    $Credentials `
-            -ArgumentList  "-Command `& {Write-Host 'Initializing Profile...'}" `
-            -WindowStyle   Hidden
+        $TaskName = "InitProfile_$Username"
+        $Action   = New-ScheduledTaskAction -Execute "cmd.exe" -Argument "/c echo init"
+        $Principal = New-ScheduledTaskPrincipal -UserId $Username -LogonType Interactive -RunLevel Limited
+        $Settings  = New-ScheduledTaskSettingsSet -ExecutionTimeLimit (New-TimeSpan -Minutes 1)
+
+        Register-ScheduledTask -TaskName $TaskName -Action $Action -Principal $Principal -Settings $Settings -Force | Out-Null
+        Start-ScheduledTask -TaskName $TaskName
+        Start-Sleep -Seconds 5
+        Unregister-ScheduledTask -TaskName $TaskName -Confirm:$false
 
         # 6. Disable the "Hi" first logon animation globally
         Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableFirstLogonAnimation" -Value 0 -ErrorAction SilentlyContinue
