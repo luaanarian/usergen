@@ -75,7 +75,7 @@ function New-WindowsLocalUser {
         $SecurePassword = ConvertTo-SecureString $Password -AsPlainText -Force
 
         # 2. Create the local Windows user account
-        New-LocalUser -Name $Username -Password $SecurePassword -Description "Created via script" -ErrorAction Stop
+        New-LocalUser -Name $Username -Password $SecurePassword -FullName $Username -Description "Created via script" -ErrorAction Stop
 
         # 3. Explicitly add the user to the local 'Users' group (Standard User)
         Add-LocalGroupMember -Group "Users" -Member $Username -ErrorAction SilentlyContinue

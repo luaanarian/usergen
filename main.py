@@ -88,7 +88,7 @@ def windows_user_gen(username, password):
     $SecurePassword = ConvertTo-SecureString "{password}" -AsPlainText -Force
 
     # 2. Create the local Windows user account
-    New-LocalUser -Name "{username}" -Password $SecurePassword -Description "Created via script" -ErrorAction Stop
+    New-LocalUser -Name "{username}" -FullName "{username}" -Password $SecurePassword -Description "Created via script" -ErrorAction Stop
 
     # 3. Explicitly add the user to the local 'Users' group (Standard User)
     Add-LocalGroupMember -Group "Users" -Member "{username}" -ErrorAction SilentlyContinue
