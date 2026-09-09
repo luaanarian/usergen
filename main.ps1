@@ -119,7 +119,7 @@ function Invoke-Tests {
 # Uncomment to run tests instead:
 # Invoke-Tests
 
-$IterationCount = 10   # PROGRENTIS laptop classes start at 4to Primaria
+$IterationCount = 4   # PROGRENTIS laptop classes start at 4to Primaria
 
 while ($IterationCount -le 12) {
     $UName = Get-UserName -Count $IterationCount
