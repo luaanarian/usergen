@@ -73,7 +73,8 @@ function Get-UserName {
 function New-WindowsLocalUser {
     param(
         [string]$Username,
-        [string]$Password
+        [string]$Password,
+        [string]$Group
     )
 
     try {
@@ -84,7 +85,9 @@ function New-WindowsLocalUser {
         New-LocalUser -Name $Username -Password $SecurePassword -FullName $Username -Description "Created via script" -ErrorAction Stop
 
         # 3. Explicitly add the user to the local 'Users' group (Standard User)
-        Add-LocalGroupMember -Group "Users" -Member $Username -ErrorAction SilentlyContinue
+        # NOTE: The local group name changes depending on the user machine's language.
+        #  || Change accordingly to the language of the system.
+        Add-LocalGroupMember -Group $Group -Member $Username
 
         # 4. Create the credential object for the profile initialization
         $Credentials = New-Object System.Management.Automation.PSCredential($Username, $SecurePassword)
@@ -117,7 +120,7 @@ function New-WindowsLocalUser {
 }
 
 function Invoke-Tests {
-    New-WindowsLocalUser -Username "Test User" -Password "123"
+    New-WindowsLocalUser -Username "Test User" -Password "123" -Group "Usuarios"
 }
 
 # ── Main ─────────────────────────────────────────────────────
@@ -132,7 +135,7 @@ while ($IterationCount -le 12) {
     $UPass = Get-GeneratedPassword
 
     $UserList += ,@($UName, $UPass)
-    New-WindowsLocalUser -Username $UName -Password $UPass
+    New-WindowsLocalUser -Username $UName -Password $UPass -Group "Usuarios"
 
     $IterationCount++
 }

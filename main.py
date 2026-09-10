@@ -82,7 +82,7 @@ def user_name_gen(count):
 ### silently in the background. Uses PowerShell as the main shell to commit said changes on the Windows computer.
 ###
 ### Returns either celebratory string or an error-containing string along with the Error string.
-def windows_user_gen(username, password):
+def windows_user_gen(username, password, group):
     powershell_script = f"""
     # 1. Create the secure password string
     $SecurePassword = ConvertTo-SecureString "{password}" -AsPlainText -Force
@@ -91,7 +91,9 @@ def windows_user_gen(username, password):
     New-LocalUser -Name "{username}" -FullName "{username}" -Password $SecurePassword -Description "Created via script" -ErrorAction Stop
 
     # 3. Explicitly add the user to the local 'Users' group (Standard User)
-    Add-LocalGroupMember -Group "Users" -Member "{username}" -ErrorAction SilentlyContinue
+    # NOTE: The local group name changes depending on the user machine's language.
+    #  || Change accordingly to the language of the system.
+    Add-LocalGroupMember -Group "{group}" -Member "{username}"
 
     # 4. Create the credential object for the profile initialization
     $Credentials = New-Object System.Management.Automation.PSCredential("{username}", $SecurePassword)
@@ -128,7 +130,7 @@ def windows_user_gen(username, password):
 ###
 ### Returns nothing.
 def run_tests():
-    windows_user_gen("Test User", "123")
+    windows_user_gen("Test User", "123", "Usuarios")
 
 def main():
     # Uncomment to run some tests.
@@ -136,20 +138,15 @@ def main():
 
     iteration_count = 1 # Laptop classes which would use PROGRENTIS start at 4to Pri., hence why it's 4 and not 1.
     while iteration_count <= 270:
-        #username = user_name_gen(iteration_count)
+        username = user_name_gen(iteration_count)
         password = pass_gen()
 
-        if iteration_count % 9 == 0:
-            print(f"{password};")
-        else:
-            print(f"{password}")
-
-        #user_list.append([username, password])
-        #windows_user_gen(username, password)
+        user_list.append([username, password])
+        windows_user_gen(username, password, "Usuarios")
 
         iteration_count += 1
 
-    #print(f"User Generation Report:\n{user_list}")
+    print(f"User Generation Report:\n{user_list}")
 
 if __name__ == "__main__":
     main()
