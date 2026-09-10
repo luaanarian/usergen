@@ -3,6 +3,12 @@
 #  Translated from Python to PowerShell by Claude
 # ============================================================
 
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    # Added -NoExit here to keep the new elevated window open
+    Start-Process powershell.exe "-NoExit -NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+    Exit
+}
+
 $PassBaseKeywords = @(
     # Kitchen & Dining
     "mesa", "silla", "plato", "vaso", "taza",
@@ -135,3 +141,5 @@ Write-Host "User Generation Report:"
 foreach ($Entry in $UserList) {
     Write-Host "  Username: $($Entry[0])  |  Password: $($Entry[1])"
 }
+
+Write-Host "Script finished."

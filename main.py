@@ -134,17 +134,22 @@ def main():
     # Uncomment to run some tests.
     #run_tests()
 
-    iteration_count = 4 # Laptop classes which would use PROGRENTIS start at 4to Pri., hence why it's 4 and not 1.
-    while iteration_count <= 12:
-        username = user_name_gen(iteration_count)
+    iteration_count = 1 # Laptop classes which would use PROGRENTIS start at 4to Pri., hence why it's 4 and not 1.
+    while iteration_count <= 270:
+        #username = user_name_gen(iteration_count)
         password = pass_gen()
 
-        user_list.append([username, password])
-        windows_user_gen(username, password)
+        if iteration_count % 9 == 0:
+            print(f"{password};")
+        else:
+            print(f"{password}")
+
+        #user_list.append([username, password])
+        #windows_user_gen(username, password)
 
         iteration_count += 1
 
-    print(f"User Generation Report:\n{user_list}")
+    #print(f"User Generation Report:\n{user_list}")
 
 if __name__ == "__main__":
     main()
