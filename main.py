@@ -3,8 +3,10 @@
 #  Python script made and written entirely by Joshua Colell
 # ============================================================
 
-import random
 import subprocess
+import random
+import ctypes
+import sys
 
 pass_base_keyword = [
     # Kitchen & Dining
@@ -12,7 +14,7 @@ pass_base_keyword = [
     "tenedor", "cuchara", "cuchillo", "sarten", "botella",
 
     # Living Room & Bedroom
-    "cama", "almohada", "saba", "espejo", "reloj",
+    "cama", "almohada", "sabana", "espejo", "reloj",
     "lampara", "sofa", "alfombra", "cortina", "cuadro",
 
     # Electronics & Office
@@ -24,11 +26,20 @@ pass_base_keyword = [
     "sombrero", "bolso", "billetera", "llave", "gafas",
 
     # Bathroom & Cleaning
-    "toalla", "jabon", "cepillo", "esponja", "esoba",
+    "toalla", "jabon", "cepillo", "esponja", "escoba",
     "basura", "puerta", "ventana", "mochila", "maleta"
 ]
 
 user_list = []
+
+### As the name suggests, this function checks if the current terminal window has Admin
+### privilages--just so the script could run as intended.
+###
+### Returns true if on Windows & if the current window is not elevated;
+### otherwise, the function would return false.
+def is_admin():
+    try: return ctypes.windll.shell32.IsUserAnAdmin()
+    except AttributeError: return False
 
 ### This function generates a pseudo-pseudo-random string of characters
 ### that would be assigned as the User's password.
@@ -149,4 +160,13 @@ def main():
     print(f"User Generation Report:\n{user_list}")
 
 if __name__ == "__main__":
-    main()
+    if is_admin():
+        try:
+            main()
+        finally:
+            print("Script Finished.")
+            input("Press any key to exit...")
+    else:
+        ctypes.windll.shell32.ShellExecuteW(
+            None, "runas", sys.executable, " ".join(sys.argv), None, 1
+        )

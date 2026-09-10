@@ -15,7 +15,7 @@ $PassBaseKeywords = @(
     "tenedor", "cuchara", "cuchillo", "sarten", "botella",
 
     # Living Room & Bedroom
-    "cama", "almohada", "saba", "espejo", "reloj",
+    "cama", "almohada", "sabana", "espejo", "reloj",
     "lampara", "sofa", "alfombra", "cortina", "cuadro",
 
     # Electronics & Office
@@ -27,7 +27,7 @@ $PassBaseKeywords = @(
     "sombrero", "bolso", "billetera", "llave", "gafas",
 
     # Bathroom & Cleaning
-    "toalla", "jabon", "cepillo", "esponja", "esoba",
+    "toalla", "jabon", "cepillo", "esponja", "escoba",
     "basura", "puerta", "ventana", "mochila", "maleta"
 )
 
